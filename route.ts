@@ -14,7 +14,7 @@ export const publicRoutes = [
  * redirect logged in users to /settings
  * @type {string[]}
  */
-export const authRoutes = ["/login", "/register"];
+export const authRoutes = ["/login", "/register", "/error"];
 
 
 /**

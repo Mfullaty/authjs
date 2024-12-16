@@ -19,8 +19,15 @@ import { Button } from "@/components/ui/button";
 import FormError from "@/components/form-error";
 import FormSuccess from "@/components/form-success";
 import { Login } from "@/actions/login";
+import { useSearchParams } from "next/navigation";
 
 export const LoginForm = () => {
+  const searchParams = useSearchParams();
+  const urlError = searchParams.get("error") === "OAuthAccountNotLinked"
+  ? "Email is already in use with a different provider. Please sign in with that provider or use a different email address."
+  : "";
+
+
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined >("");
   const [success, setSuccess] = useState<string | undefined>("");
@@ -37,8 +44,9 @@ export const LoginForm = () => {
     setSuccess("");
     startTransition(() => {
       Login(values).then((data) => {
-        setError(data.error);
-        setSuccess(data.success);
+        setError(data?.error);
+        // TODO: Add when we implement 2FA
+        // setSuccess(data?.success);
       });
     });
   };
@@ -90,7 +98,7 @@ export const LoginForm = () => {
               )}
             />
           </div>
-          <FormError message={error} />
+          <FormError message={error || urlError} />
           <FormSuccess message={success} />
           <Button disabled={isPending} type="submit" className="w-full">
             Login

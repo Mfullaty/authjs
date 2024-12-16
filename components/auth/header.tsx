@@ -9,7 +9,7 @@ const poppins = Poppins({
 interface HeaderProps {
   label: string;
 }
-const Header = ({ label }: HeaderProps) => {
+export const Header = ({ label }: HeaderProps) => {
   return (
     <div className="w-full flex flex-col gap-y4 items-center justify-center">
       <h1 className={cn("text-3xl font-semibold", poppins.className)}>
@@ -20,5 +20,3 @@ const Header = ({ label }: HeaderProps) => {
     </div>
   );
 };
-
-export default Header;

@@ -1,16 +1,58 @@
-import { FcGoogle } from "react-icons/fc";
-import { FaFacebook } from "react-icons/fa";
+import { FaGoogle, FaFacebook, FaGithub } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
+import { signIn } from "next-auth/react";
+import { DEFAULT_LOGIN_REDIRECT } from "@/route";
 
-export const Social = () => {
+interface SocialProps {
+  googleEnabled?: boolean;
+  facebookEnabled?: boolean;
+  githubEnabled?: boolean;
+}
+
+export const Social = ({
+  googleEnabled = true,
+  facebookEnabled,
+  githubEnabled,
+}: SocialProps) => {
+
+  const onClick = (provider: "google" | "facebook" | "github") => {
+    signIn(provider, {
+      callbackUrl: DEFAULT_LOGIN_REDIRECT,
+    })
+  }
   return (
     <div className="flex items-center w-full gap-x-2">
-      <Button size="lg" className="w-full" variant="outline" onClick={() => {}}>
-        <FcGoogle className="w-5-h-5" />
-      </Button>
-      <Button size="lg" className="w-full" variant="outline" onClick={() => {}}>
-        <FaFacebook className="w-5 h-5" />
-      </Button>
+      {googleEnabled && (
+        <Button
+          size="lg"
+          className="w-full"
+          variant="outline"
+          onClick={() => onClick("google")}
+        >
+          <FaGoogle className="w-5-h-5" />
+        </Button>
+      )}
+
+      {facebookEnabled && (
+        <Button
+          size="lg"
+          className="w-full"
+          variant="outline"
+          onClick={() => onClick("facebook")}
+        >
+          <FaFacebook className="w-5 h-5" />
+        </Button>
+      )}
+      {githubEnabled && (
+        <Button
+          size="lg"
+          className="w-full"
+          variant="outline"
+          onClick={() => onClick("github")}
+        >
+          <FaGithub className="w-5 h-5" />
+        </Button>
+      )}
     </div>
   );
 };
