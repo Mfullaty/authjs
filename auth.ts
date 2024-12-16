@@ -1,18 +1,29 @@
 import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { db } from "./lib/db";
+import { db } from "@/lib/db";
 import authConfig from "@/auth.config";
-import { getUserById } from "./data/user";
+import { getUserById } from "@/data/user";
+import { UserRole } from "@prisma/client";
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   callbacks: {
+    async signIn({ user }) {
+      const existingUser = await getUserById(user.id);
+      if(!existingUser || !existingUser.emailVerified){
+        return false
+      }
+      return true;
+    },
     async session({ token, session }) {
       if (token.sub && session.user) {
         session.user.id = token.sub;
       }
 
       if (token.role && session.user) {
-        session.user.role = token.role;
+        session.user.role = token.role as UserRole;
+        // Add As many custom fields as you want (make sure they are defined in next-auth.d.ts)
+        // session.user.customField = "something";
+
       }
       return session;
     },
