@@ -4,9 +4,8 @@
  */
 export const publicRoutes = [
   "/",
-  "/forgot-password",
-  "/reset-password",
   "/verify-email",
+
 ];
 
 /**
@@ -14,8 +13,14 @@ export const publicRoutes = [
  * redirect logged in users to /settings
  * @type {string[]}
  */
-export const authRoutes = ["/login", "/register", "/error"];
-
+export const authRoutes = [
+  "/login",
+  "/register", 
+  "/error",
+  "/reset-password",
+  "/new-password",    
+  
+];
 
 /**
  * Prefix for Api Authentication Routes
@@ -25,12 +30,8 @@ export const authRoutes = ["/login", "/register", "/error"];
  */
 export const apiAuthPrefix = "/api/auth";
 
-
 /**
  * Default path after logging in
  * @type {string}
  */
 export const DEFAULT_LOGIN_REDIRECT = "/settings";
-
-
-
