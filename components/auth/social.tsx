@@ -5,13 +5,11 @@ import { DEFAULT_LOGIN_REDIRECT } from "@/route";
 
 interface SocialProps {
   googleEnabled?: boolean;
-  facebookEnabled?: boolean;
   githubEnabled?: boolean;
 }
 
 export const Social = ({
   googleEnabled = true,
-  facebookEnabled,
   githubEnabled,
 }: SocialProps) => {
 
@@ -30,17 +28,6 @@ export const Social = ({
           onClick={() => onClick("google")}
         >
           <FaGoogle className="w-5-h-5" />
-        </Button>
-      )}
-
-      {facebookEnabled && (
-        <Button
-          size="lg"
-          className="w-full"
-          variant="outline"
-          onClick={() => onClick("facebook")}
-        >
-          <FaFacebook className="w-5 h-5" />
         </Button>
       )}
       {githubEnabled && (
