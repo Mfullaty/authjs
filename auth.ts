@@ -34,18 +34,14 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       const existingUser = await getUserById(user.id);
       if (!existingUser?.emailVerified) return false;
 
-      // TODO: Add 2FA check
       if (existingUser.isTwoFactorEnabled) {
         const twoFactorConfirmation = await getTwofactorConfirmationByUserId(
           existingUser.id
         );
 
-        console.log({twoFactorConfirmation})
+        console.log({ twoFactorConfirmation });
 
         if (!twoFactorConfirmation) return false;
-
-        // generateTwoFactorToken
-        // sendTwoFactorTokenEmail
         //Delete 2FA (otp) code for next sign in
         await db.twoFactorConfirmation.delete({
           where: { id: twoFactorConfirmation.id },
@@ -59,10 +55,15 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         session.user.id = token.sub;
       }
 
-      if (token.role && session.user) {
-        session.user.role = token.role as UserRole;
+      if(session.user){
+        if(token.role){
+          session.user.role = token.role as UserRole;
         // Add As many custom fields as you want (make sure they are defined in next-auth.d.ts)
         // session.user.customField = "something";
+        }
+
+        session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean;
+
       }
       return session;
     },
@@ -74,6 +75,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       if (!existingUser) return token;
 
       token.role = existingUser.role;
+      token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
 
       return token;
     },
