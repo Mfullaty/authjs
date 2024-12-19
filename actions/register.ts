@@ -25,10 +25,13 @@ export const Register = async (values: z.infer<typeof RegisterSchema>) => {
     return { error: "Email already exists" };
   }
 
+  const lowerEmail = email.toLowerCase();
+
+
   await db.user.create({
     data: {
       name,
-      email,
+      email : lowerEmail,
       password: hashedPassword,
     },
   });

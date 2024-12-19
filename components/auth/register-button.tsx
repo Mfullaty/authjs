@@ -9,21 +9,22 @@ import {
   DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { LoginForm } from "./login-form";
+import { Register } from "@/actions/register";
+import { RegisterForm } from "@/components/auth/register-form";
 
-interface LoginButtonProps {
+interface RegisterButtonProps {
   children: React.ReactNode;
   mode?: "modal" | "redirect";
   asChild?: boolean;
   className?: string;
 }
 
-export const LoginButton = ({
+export const RegisterButton = ({
   children,
   mode = "redirect",
   asChild,
   className,
-}: LoginButtonProps) => {
+}: RegisterButtonProps) => {
   const onClick = () => {
     router.push("/login");
   };
@@ -35,7 +36,7 @@ export const LoginButton = ({
       <Dialog>
         <DialogTrigger asChild={asChild}>{children}</DialogTrigger>
         <DialogContent className="sm:max-w-[425px] p-0 w-auto bg-transparent shadow-none border-none">
-          <LoginForm />
+          <RegisterForm />
         </DialogContent>
       </Dialog>
     );

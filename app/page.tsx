@@ -2,7 +2,8 @@
 import { Poppins } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import LoginButton from "@/components/auth/login-button";
+import{ LoginButton} from "@/components/auth/login-button";
+import { RegisterButton } from "@/components/auth/register-button";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -25,11 +26,17 @@ export default function Home() {
           A simple authentication system
         </p>
       </div>
-      <LoginButton>
+      <LoginButton mode="modal" asChild>
         <Button variant="outline" size="lg">
           Login
         </Button>
       </LoginButton>
+      
+      <RegisterButton mode="modal" asChild>
+        <Button variant="outline" size="lg">
+          Register
+        </Button>
+      </RegisterButton>
     </main>
   );
 }

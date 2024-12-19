@@ -15,7 +15,7 @@ import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
 import { db } from "@/lib/db";
 import { getTwofactorConfirmationByUserId } from "@/data/two-factor-confirmation";
 
-export const Login = async (values: z.infer<typeof LoginSchema>) => {
+export const Login = async (values: z.infer<typeof LoginSchema>, callbackUrl?: string | null) => {
   const validatedFields = LoginSchema.safeParse(values);
 
   if (!validatedFields.success) {
@@ -24,7 +24,9 @@ export const Login = async (values: z.infer<typeof LoginSchema>) => {
 
   const { email, password, code } = validatedFields.data;
 
-  const existingUser = await getUserByEmail(email);
+  const lowerEmail = email.toLowerCase();
+
+  const existingUser = await getUserByEmail(lowerEmail);
 
   if (!existingUser || !existingUser.email || !existingUser.password) {
     return { error: "User not found" };
@@ -87,9 +89,9 @@ export const Login = async (values: z.infer<typeof LoginSchema>) => {
 
   try {
     await signIn("credentials", {
-      email,
-      password,
-      redirectTo: DEFAULT_LOGIN_REDIRECT,
+      email: lowerEmail,
+      password, 
+      redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
     });
   } catch (error) {
     if (error instanceof AuthError) {

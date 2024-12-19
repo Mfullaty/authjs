@@ -7,6 +7,7 @@ import { UserRole } from "@prisma/client";
 import { getTwofactorConfirmationByUserId } from "./data/two-factor-confirmation";
 import { generateTwoFactorToken } from "./lib/tokens";
 import { sendTwoFactorTokenEmail } from "./lib/mail";
+import { getAccountByUserId } from "./data/account";
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   pages: {
@@ -55,15 +56,17 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         session.user.id = token.sub;
       }
 
-      if(session.user){
-        if(token.role){
+      if (session.user) {
+        if (token.role) {
           session.user.role = token.role as UserRole;
-        // Add As many custom fields as you want (make sure they are defined in next-auth.d.ts)
-        // session.user.customField = "something";
+          // Add As many custom fields as you want (make sure they are defined in next-auth.d.ts)
+          // session.user.customField = "something";
         }
 
         session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean;
-
+        session.user.name = token.name;
+        session.user.email = token.email as string;
+        session.user.isOAuth = token.isOAuth as boolean;
       }
       return session;
     },
@@ -74,7 +77,14 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
       if (!existingUser) return token;
 
+      const existingAccount = await getAccountByUserId(existingUser.id);
+
+      const isOAuth = !!existingAccount;
+
+      token.name = existingUser.name;
+      token.email = existingUser.email;
       token.role = existingUser.role;
+      token.isOAuth = isOAuth;
       token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
 
       return token;
